@@ -10,7 +10,8 @@ public class KafkaEventListener {
     @KafkaListener(topics = "${kafka.topic}")
     public void listen(Message<String> message){
         String payload = message.getPayload();
-        System.out.println(payload);
+        System.out.println(payload);//hello
+
     }
 
 }
