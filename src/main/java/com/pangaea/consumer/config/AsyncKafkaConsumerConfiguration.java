@@ -11,12 +11,20 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * created by Adewale S Osobu
+ *
+ *  This class houses the configuration that powers the
+ *  request-reply synchronization between kafka publisher and consumer
+ */
+
 @Configuration
-public class KafkaConsumerReplyConfig {
+public class AsyncKafkaConsumerConfiguration {
 
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -24,6 +32,10 @@ public class KafkaConsumerReplyConfig {
     @Value("${kafka.consumergroup}")
     private String consumerGroup;
 
+    /**
+     * defines consumer configuration
+     * @return
+     */
     @Bean
     public Map<String, Object> consumerConfigs() {
 
@@ -36,6 +48,10 @@ public class KafkaConsumerReplyConfig {
         return props;
     }
 
+    /**
+     * defines the producer configurations
+     * @return
+     */
     @Bean
     public Map<String, Object> producerConfigs() {
 
@@ -47,28 +63,49 @@ public class KafkaConsumerReplyConfig {
         return props;
     }
 
+    /**
+     * defines a concrete instance of the producer factory
+     * @return
+     */
     @Bean
-    public ConsumerFactory<String, String> requestConsumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(),
-                new StringDeserializer());
-    }
-
-    @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> requestListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(requestConsumerFactory());
-        factory.setReplyTemplate(replyTemplate());
-        return factory;
-    }
-
-    @Bean
-    public ProducerFactory<String, String> replyProducerFactory() {
+    public ProducerFactory<String, String> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
+    /**
+     * defines an instance of the Listenere container factory
+     * responsible for handling reply communique from consumer
+     * @return
+     */
     @Bean
-    public KafkaTemplate<String, String> replyTemplate() {
-        return new KafkaTemplate<>(replyProducerFactory());
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+        factory.setReplyTemplate(kafkaTemplate());
+        return factory;
+    }
+
+    /**
+     * required for the creation of the KafkaListenerContainerFactory
+     * @return
+     */
+    @Bean
+    public ConsumerFactory<String, String> consumerFactory() {
+
+        JsonDeserializer<String> deserializer = new JsonDeserializer<>(String.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(true);
+
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs(),new StringDeserializer(),deserializer);
+    }
+
+    /**
+     * defines the defacto kafka template for producers
+     * @return
+     */
+    @Bean
+    public KafkaTemplate<String, String> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
     }
 }

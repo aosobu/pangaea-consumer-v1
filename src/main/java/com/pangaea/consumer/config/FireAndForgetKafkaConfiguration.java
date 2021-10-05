@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //@Configuration
-public class KafkaMessageConsumer {
+public class FireAndForgetKafkaConfiguration {
 
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
