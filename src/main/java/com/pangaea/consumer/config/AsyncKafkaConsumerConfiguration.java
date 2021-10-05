@@ -92,12 +92,12 @@ public class AsyncKafkaConsumerConfiguration {
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
 
-        JsonDeserializer<String> deserializer = new JsonDeserializer<>(String.class);
-        deserializer.setRemoveTypeHeaders(false);
-        deserializer.addTrustedPackages("*");
-        deserializer.setUseTypeMapperForKey(true);
+//        JsonDeserializer<String> deserializer = new JsonDeserializer<>(String.class);
+//        deserializer.setRemoveTypeHeaders(false);
+//        deserializer.addTrustedPackages("*");
+//        deserializer.setUseTypeMapperForKey(true);
 
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs(),new StringDeserializer(),deserializer);
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(), new StringDeserializer());
     }
 
     /**

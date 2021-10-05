@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -25,5 +26,19 @@ public class Subscriber {
     @JoinColumn(name = "topic_id", referencedColumnName = "id")
     private Topic topic;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subscriber that = (Subscriber) o;
+        return id == that.id &&
+                Objects.equals(url, that.url) &&
+                Objects.equals(topic, that.topic);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, url, topic);
+    }
 }
 
