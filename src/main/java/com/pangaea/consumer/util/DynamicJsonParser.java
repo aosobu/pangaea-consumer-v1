@@ -1,9 +1,11 @@
 package com.pangaea.consumer.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -77,5 +79,13 @@ public class DynamicJsonParser {
         }
 
         return result;
+    }
+
+    public static String asJsonString(HashMap<String, Object> map) {
+        try {
+            return new ObjectMapper().writeValueAsString(map);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 public class DynamicJsonParserTest {
 
     @Test
@@ -51,11 +53,25 @@ public class DynamicJsonParserTest {
         try {
 
             JSONObject jsonPayload = new JSONObject(payload);
-            System.out.println(DynamicJsonParser.getKey(jsonPayload , key));
             Assert.assertEquals("dayo,samuel,david", DynamicJsonParser.getKey(jsonPayload , key));
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void test_payload_is_formatted_as_proper_json_object() {
+
+        HashMap<String, Object> payloadToBePublished = new HashMap<>();
+        String topic = "topic1";
+        String payload = "{\n" +
+                "    \"message\":\"hello\",\n" +
+                "}";
+
+        payloadToBePublished.put("topic", topic);
+        payloadToBePublished.put("data", payload);
+
+        System.out.println(DynamicJsonParser.asJsonString(payloadToBePublished));
     }
 }
