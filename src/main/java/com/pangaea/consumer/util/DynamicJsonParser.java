@@ -29,6 +29,8 @@ public class DynamicJsonParser {
 
     public static String getKey(JSONObject payload, String key){
 
+        result = "";
+
         try {
             Iterator<?> keys;
             String nextKeys;

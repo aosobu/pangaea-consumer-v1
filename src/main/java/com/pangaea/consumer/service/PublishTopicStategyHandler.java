@@ -50,24 +50,24 @@ public class PublishTopicStategyHandler implements StrategyHandler {
 
             if(!topicFromPayload.isEmpty()){
                 Topic topic = topicService.findByName(topicFromPayload);
-                Set<Subscriber> subscriberList = topic.getSubscriberList();
+               // Set<Subscriber> subscriberList = topic.getSubscriberList();
 
-                if (!topic.getSubscriberList().isEmpty()) {
-
-                    HashMap<String, Object> payloadToBePublished = new HashMap<>();
-                    payloadToBePublished.put("topic", topic);
-
-                    //remove appended topic key from payload
-                    payloadToBePublished.put("data", payload);
-
-                    String payLoadAsJsonString = DynamicJsonParser.asJsonString(payloadToBePublished);
-
-                    subscriberList.forEach(subscriber -> {
-                        logger.info(payLoadAsJsonString +  " published to " + subscriber.getUrl());
-                        result = "publish successful";
-                    });
-                    return result;
-                }
+//                if (!topic.getSubscriberList().isEmpty()) {
+//
+//                    HashMap<String, Object> payloadToBePublished = new HashMap<>();
+//                    payloadToBePublished.put("topic", topic);
+//
+//                    //remove appended topic key from payload
+//                    payloadToBePublished.put("data", payload);
+//
+//                    String payLoadAsJsonString = DynamicJsonParser.asJsonString(payloadToBePublished);
+//
+//                    subscriberList.forEach(subscriber -> {
+//                        logger.info(payLoadAsJsonString +  " published to " + subscriber.getUrl());
+//                        result = "publish successful";
+//                    });
+//                    return result;
+//                }
             }
 
         } catch (JSONException e) {

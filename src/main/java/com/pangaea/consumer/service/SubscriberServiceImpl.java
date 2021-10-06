@@ -23,6 +23,11 @@ public class SubscriberServiceImpl implements SubscriberService{
         return subscriberRepository.findAllByUrl(url);
     }
 
+    @Override
+    public List<Subscriber> findAllByUrlAndTopicId(String url, Long topicId) {
+        return subscriberRepository.findAllByUrlAndTopicId(url, topicId);
+    }
+
     @Autowired
     public void setSubscriberRepository(SubscriberRepository subscriberRepository) {
         this.subscriberRepository = subscriberRepository;

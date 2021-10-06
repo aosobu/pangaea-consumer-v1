@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -21,9 +23,10 @@ public class Subscriber {
     private long id;
     private String url;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "topic_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    @JoinColumn(name = "topic_id", referencedColumnName = "id")
     private Topic topic;
 
     @Override

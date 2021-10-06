@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
 @Entity
@@ -20,7 +19,4 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Subscriber.class, mappedBy = "topic")
-    Set<Subscriber> subscriberList;
 }

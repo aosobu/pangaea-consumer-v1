@@ -11,19 +11,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Service
-public class SubscriberRequest {
+public class SubscriberRequest extends SubscriberRequestBase {
 
-    private String url;
-    private String topic;
     private List<String> errors = new ArrayList<>();
 
     @JsonIgnore
@@ -41,8 +41,6 @@ public class SubscriberRequest {
             if(!alreadySubscribedToTopic(request))
                 return request;
             else{
-                request.setUrl(null);
-                request.setTopic(null);
                 request.getErrors().add("Url already subscribed to Topic! You can subscribe to another topic");
                 return request;
             }
@@ -50,28 +48,28 @@ public class SubscriberRequest {
 
         if(!UrlValidator.urlValidator(url))
             request.getErrors().add("Oops! Badly formed URL ");
-        if(topic.isEmpty())
+        if( Objects.isNull(topic) || topic.isEmpty())
             request.getErrors().add("Oops! Topic cannot be left empty ");
         return request;
     }
 
     private static boolean alreadySubscribedToTopic(SubscriberRequest subscriberRequest){
-        Topic topic = new Topic();
+        Topic topic;
         try{
             topic = topicService.findByName(subscriberRequest.getTopic());
+            if(Objects.isNull(topic)) {
+                subscriberRequest.getErrors().add("Topic currently not unavailable for subscription! Try again later");
+                return false;
+            }
         }catch(Exception ex){
             //send internal mail to admin or populate self service error table on database
-            subscriberRequest.getErrors().add("Topic currently unavailable for subscription! Try again later");
+            subscriberRequest.getErrors().add("Topic currently not unavailable for subscription! Try again later");
             return false;
         }
 
-        if(topic != null) {
-            Set<Subscriber> subscriberHashSet = topic.getSubscriberList();
-            List<Subscriber> subscriberListWithIncomingUrl = subscriberService.findByUrl(subscriberRequest.getUrl());
-            for(Subscriber subscriber : subscriberListWithIncomingUrl)
-                if(subscriberHashSet.contains(subscriber))
-                    return true;
-        }
+        List<Subscriber> subscriberList =  subscriberService.findAllByUrlAndTopicId(subscriberRequest.getUrl(), topic.getId());
+        if(subscriberList.size() == 1) return true;
+
         return false;
     }
 

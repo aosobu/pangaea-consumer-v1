@@ -31,11 +31,9 @@ public class TopicServiceImpl implements TopicService {
     }
 
     private Topic buildTopic(String name){
-        Topic topic = new Topic();
-        Set<Subscriber> subscriberSet = new HashSet<>();
 
+        Topic topic = new Topic();
         topic.setName(name);
-        topic.setSubscriberList(subscriberSet);
 
         return topic;
     }

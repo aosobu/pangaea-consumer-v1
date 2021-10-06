@@ -1,6 +1,7 @@
 package com.pangaea.consumer.controller;
 
 import com.pangaea.consumer.model.api.SubscriberRequest;
+import com.pangaea.consumer.model.api.SubscriberRequestBase;
 import com.pangaea.consumer.model.api.TopicRequest;
 import com.pangaea.consumer.service.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class SubscriberController {
 
     @PostMapping(value = "/subscribe/{topic}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<SubscriberRequest> subscribe(@RequestBody TopicRequest request, @PathVariable String topic){
+    public ResponseEntity<SubscriberRequestBase> subscribe(@RequestBody TopicRequest request, @PathVariable String topic){
         SubscriberRequest subscriberRequest = new SubscriberRequest();
         try {
             subscriberRequest  = SubscriberRequest.with(request.getUrl(), topic);
