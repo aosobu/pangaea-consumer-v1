@@ -31,13 +31,13 @@ public class SubscriberRequest {
     @JsonIgnore
     private static SubscriberServiceImpl subscriberService;
 
-    public static SubscriberRequest with(String url, String topic) throws Exception {
+    public static SubscriberRequest with(String url, String topic) {
         SubscriberRequest request = new SubscriberRequest();
 
         if(UrlValidator.urlValidator(url) && !topic.isEmpty()){
             request.setTopic(topic);
             request.setUrl(url);
-            if(!checkIfAlreadySubscribedToTopic(request))
+            if(!alreadySubscribedToTopic(request))
                 return request;
             else{
                 request.setUrl(null);
@@ -54,13 +54,15 @@ public class SubscriberRequest {
         return request;
     }
 
-    private static boolean checkIfAlreadySubscribedToTopic(SubscriberRequest subscriberRequest){
+    private static boolean alreadySubscribedToTopic(SubscriberRequest subscriberRequest){
         Topic topic = topicService.findByName(subscriberRequest.getTopic());
 
         if(topic != null) {
             Set<Subscriber> subscriberHashSet = topic.getSubscriberList();
-            List<Subscriber> currentSubscriberListWithIncomingUrl = subscriberService.findByUrl(subscriberRequest.getUrl());
-            for(Subscriber subscriber : currentSubscriberListWithIncomingUrl) if(subscriberHashSet.contains(subscriber)) return true;
+            List<Subscriber> subscriberListWithIncomingUrl = subscriberService.findByUrl(subscriberRequest.getUrl());
+            for(Subscriber subscriber : subscriberListWithIncomingUrl)
+                if(subscriberHashSet.contains(subscriber))
+                    return true;
         }
         return false;
     }

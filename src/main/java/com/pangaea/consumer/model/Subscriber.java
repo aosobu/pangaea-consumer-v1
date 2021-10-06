@@ -31,12 +31,13 @@ public class Subscriber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Subscriber that = (Subscriber) o;
-        return Objects.equals(url, that.url);
+        return Objects.equals(url, that.url) &&
+                Objects.equals(topic.getName(), that.topic.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url);
+        return Objects.hash(url, topic.getName());
     }
 }
 

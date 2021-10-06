@@ -2,7 +2,6 @@ package com.pangaea.consumer.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.net.URL;
 
 public class UrlValidator {
 

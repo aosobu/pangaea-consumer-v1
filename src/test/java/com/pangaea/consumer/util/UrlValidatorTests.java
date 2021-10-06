@@ -6,13 +6,13 @@ import org.junit.Test;
 public class UrlValidatorTests {
 
     @Test
-    public void test_url_validator_passes_when_url_valid() {
+    public void test_url_validator_passes_when_url_is_valid() {
         String url = "http://mysubscriber.test";
         Assert.assertTrue(UrlValidator.urlValidator(url));
     }
 
     @Test
-    public void test_url_validator_fails_when_url_invalid() {
+    public void test_url_validator_fails_when_url_is_invalid() {
         String url = "http:/mysubscriber.test";
         Assert.assertFalse(UrlValidator.urlValidator(url));
     }

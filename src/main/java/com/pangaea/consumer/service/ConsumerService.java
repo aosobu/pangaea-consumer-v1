@@ -8,11 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConsumerService {
 
-//    @KafkaListener(topics = "${kafka.topic.request-topic}" , containerFactory = "kafkaListenerContainerFactory")
-//    @SendTo()
-//    public String receive(Message<String> message) {
-//        String payload = message.getPayload();
-//        System.out.println(payload);
-//        return "Jesus Is Lord!!!";
-//    }
+    @KafkaListener(topics = "${kafka.topic.request-topic}" , containerFactory = "kafkaListenerContainerFactory")
+    @SendTo()
+    public String receive(Message<String> message) {
+        //retrieve
+        String payload = message.getPayload();
+        System.out.println(payload);
+        return "publish successful";
+    }
 }

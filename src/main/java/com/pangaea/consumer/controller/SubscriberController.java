@@ -2,7 +2,6 @@ package com.pangaea.consumer.controller;
 
 import com.pangaea.consumer.model.api.SubscriberRequest;
 import com.pangaea.consumer.service.SubscriberService;
-import com.pangaea.consumer.util.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
