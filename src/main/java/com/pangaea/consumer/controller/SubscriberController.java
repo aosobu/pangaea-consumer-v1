@@ -1,5 +1,6 @@
 package com.pangaea.consumer.controller;
 
+import com.pangaea.consumer.model.api.SubscriberRequest;
 import com.pangaea.consumer.service.SubscriberService;
 import com.pangaea.consumer.util.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,16 @@ public class SubscriberController {
 
     @PostMapping(value = "/subscribe/{topic}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String subscribe(@RequestBody String request, @PathVariable String topic){
-        return subscriberService.saveNewSubscriber(request, topic);
+    public SubscriberRequest subscribe(@RequestBody String request, @PathVariable String topic){
+        SubscriberRequest subscriberRequest = null;
+        try {
+            subscriberRequest  = SubscriberRequest.with(request, topic);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+        if(!subscriberRequest.getErrors().isEmpty())
+            return subscriberRequest;
+        return subscriberService.saveNewSubscriber(subscriberRequest);
     }
 
     @Autowired

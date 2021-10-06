@@ -6,6 +6,8 @@ import com.pangaea.consumer.service.interfaces.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SubscriberServiceImpl implements SubscriberService{
 
@@ -14,6 +16,11 @@ public class SubscriberServiceImpl implements SubscriberService{
     @Override
     public Subscriber saveSubscriber(Subscriber subscriber) {
         return subscriberRepository.save(subscriber);
+    }
+
+    @Override
+    public List<Subscriber> findByUrl(String url) {
+        return subscriberRepository.findAllByUrl(url);
     }
 
     @Autowired
