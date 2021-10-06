@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class SubscriberRequest {
 
     private String url;
     private String topic;
-    private List<String> errors;
+    private List<String> errors = new ArrayList<>();
 
     @JsonIgnore
     private static TopicServiceImpl topicService;
@@ -55,7 +56,14 @@ public class SubscriberRequest {
     }
 
     private static boolean alreadySubscribedToTopic(SubscriberRequest subscriberRequest){
-        Topic topic = topicService.findByName(subscriberRequest.getTopic());
+        Topic topic = new Topic();
+        try{
+            topic = topicService.findByName(subscriberRequest.getTopic());
+        }catch(Exception ex){
+            //send internal mail to admin or populate self service error table on database
+            subscriberRequest.getErrors().add("Topic currently unavailable for subscription! Try again later");
+            return false;
+        }
 
         if(topic != null) {
             Set<Subscriber> subscriberHashSet = topic.getSubscriberList();

@@ -1,9 +1,12 @@
 package com.pangaea.consumer.controller;
 
 import com.pangaea.consumer.model.api.SubscriberRequest;
+import com.pangaea.consumer.model.api.TopicRequest;
 import com.pangaea.consumer.service.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -15,16 +18,18 @@ public class SubscriberController {
 
     @PostMapping(value = "/subscribe/{topic}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SubscriberRequest subscribe(@RequestBody String request, @PathVariable String topic){
-        SubscriberRequest subscriberRequest = null;
+    public ResponseEntity<SubscriberRequest> subscribe(@RequestBody TopicRequest request, @PathVariable String topic){
+        SubscriberRequest subscriberRequest = new SubscriberRequest();
         try {
-            subscriberRequest  = SubscriberRequest.with(request, topic);
+            subscriberRequest  = SubscriberRequest.with(request.getUrl(), topic);
         } catch (Exception e) {
-            throw new IllegalArgumentException(e.getMessage());
+            subscriberRequest.getErrors().add(e.getMessage());
+            return new ResponseEntity<>(subscriberRequest, HttpStatus.EXPECTATION_FAILED); //TODO :: @ControllerAdvice
         }
         if(!subscriberRequest.getErrors().isEmpty())
-            return subscriberRequest;
-        return subscriberService.saveNewSubscriber(subscriberRequest);
+            return new ResponseEntity<>(subscriberRequest, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(subscriberService.saveNewSubscriber(subscriberRequest), HttpStatus.OK);
     }
 
     @Autowired

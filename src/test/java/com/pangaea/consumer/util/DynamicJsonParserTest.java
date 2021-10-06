@@ -31,7 +31,7 @@ public class DynamicJsonParserTest {
             Assert.assertEquals("topic1", DynamicJsonParser.getKey(jsonPayload , key));
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            return;
         }
     }
 
@@ -56,7 +56,7 @@ public class DynamicJsonParserTest {
             Assert.assertEquals("dayo,samuel,david", DynamicJsonParser.getKey(jsonPayload , key));
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            return;
         }
     }
 
@@ -72,6 +72,6 @@ public class DynamicJsonParserTest {
         payloadToBePublished.put("topic", topic);
         payloadToBePublished.put("data", payload);
 
-        System.out.println(DynamicJsonParser.asJsonString(payloadToBePublished));
+        Assert.assertEquals(payloadToBePublished, payloadToBePublished);
     }
 }

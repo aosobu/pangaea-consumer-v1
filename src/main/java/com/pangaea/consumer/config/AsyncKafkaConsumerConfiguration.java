@@ -23,7 +23,7 @@ import java.util.Map;
  *  request-reply synchronization between kafka publisher and consumer
  */
 
-@Configuration
+//@Configuration
 public class AsyncKafkaConsumerConfiguration {
 
     @Value("${kafka.bootstrap-servers}")

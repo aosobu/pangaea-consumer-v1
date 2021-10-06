@@ -5,6 +5,9 @@ import com.pangaea.consumer.model.Topic;
 import com.pangaea.consumer.model.api.SubscriberRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.Objects;
 
 @Service
 public class SubscriberService {
@@ -17,7 +20,10 @@ public class SubscriberService {
         String topicName = subscriberRequest.getTopic();
 
         topic.setName(topicName);
-        topic = topicService.createNewTopic(topicName);
+        topic = topicService.findByName(topicName);
+
+        topic = !Objects.isNull(topic) && !StringUtils.isEmpty(topic.getName()) ?
+                    topic : topicService.createNewTopic(topicName);
 
         Subscriber subscriber = new Subscriber();
         subscriber.setTopic(topic);
