@@ -25,7 +25,7 @@ public class SubscriberController {
             subscriberRequest  = SubscriberRequest.with(request.getUrl(), topic);
         } catch (Exception e) {
             subscriberRequest.getErrors().add(e.getMessage());
-            return new ResponseEntity<>(subscriberRequest, HttpStatus.EXPECTATION_FAILED); //TODO :: @ControllerAdvice
+            return new ResponseEntity<>(subscriberRequest, HttpStatus.BAD_REQUEST); // TODO<-::->@ControllerAdvice
         }
         if(!subscriberRequest.getErrors().isEmpty())
             return new ResponseEntity<>(subscriberRequest, HttpStatus.BAD_REQUEST);

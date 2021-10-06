@@ -19,8 +19,8 @@ public class SubscriberServiceImpl implements SubscriberService{
     }
 
     @Override
-    public List<Subscriber> findByUrl(String url) {
-        return subscriberRepository.findAllByUrl(url);
+    public List<Subscriber> findAllByTopic(Long topicId) {
+        return subscriberRepository.findAllByTopicId(topicId);
     }
 
     @Override

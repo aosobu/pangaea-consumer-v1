@@ -34,10 +34,10 @@ public class SubscriberRequest extends SubscriberRequestBase {
 
     public static SubscriberRequest with(String url, String topic) {
         SubscriberRequest request = new SubscriberRequest();
+        request.setTopic(topic);
+        request.setUrl(url);
 
         if(UrlValidator.urlValidator(url) && !topic.isEmpty()){
-            request.setTopic(topic);
-            request.setUrl(url);
             if(!alreadySubscribedToTopic(request))
                 return request;
             else{

@@ -14,7 +14,7 @@ public class BootStrapUtil {
     @Bean(name = "strategyHandlerList")
     public List<StrategyHandler> strategyHandlers(List<StrategyHandler> strategyHandlerList){
         List<StrategyHandler> handlerList = new ArrayList<>();
-        handlerList.forEach(handler -> handlerList.add(handler));
+        strategyHandlerList.forEach(handler -> handlerList.add(handler));
         return handlerList;
     }
 

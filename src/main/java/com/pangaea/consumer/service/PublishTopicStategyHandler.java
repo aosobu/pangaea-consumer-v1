@@ -14,13 +14,14 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class PublishTopicStategyHandler implements StrategyHandler {
 
     private Logger logger = LoggerFactory.getLogger(PublishTopicStategyHandler.class);
     private TopicServiceImpl topicService;
+    private SubscriberServiceImpl subscriberService;
     private String result;
 
     @Override
@@ -50,24 +51,22 @@ public class PublishTopicStategyHandler implements StrategyHandler {
 
             if(!topicFromPayload.isEmpty()){
                 Topic topic = topicService.findByName(topicFromPayload);
-               // Set<Subscriber> subscriberList = topic.getSubscriberList();
+                List<Subscriber> subscribersPerTopic = subscriberService.findAllByTopic(topic.getId());
 
-//                if (!topic.getSubscriberList().isEmpty()) {
-//
-//                    HashMap<String, Object> payloadToBePublished = new HashMap<>();
-//                    payloadToBePublished.put("topic", topic);
-//
-//                    //remove appended topic key from payload
-//                    payloadToBePublished.put("data", payload);
-//
-//                    String payLoadAsJsonString = DynamicJsonParser.asJsonString(payloadToBePublished);
-//
-//                    subscriberList.forEach(subscriber -> {
-//                        logger.info(payLoadAsJsonString +  " published to " + subscriber.getUrl());
-//                        result = "publish successful";
-//                    });
-//                    return result;
-//                }
+                if (!subscribersPerTopic.isEmpty()) {
+
+                    HashMap<String, Object> payloadToBePublished = new HashMap<>();
+                    payloadToBePublished.put("topic", DynamicJsonParser.getKey(jsonObject, "topic"));
+                    payloadToBePublished.put("data", payload);
+
+                    String payLoadAsJsonString = DynamicJsonParser.asJsonString(payloadToBePublished);
+
+                    subscribersPerTopic.forEach(subscriber -> {
+                        logger.info(payLoadAsJsonString +  " published to " + subscriber.getUrl());
+                        result = "publish successful";
+                    });
+                    return result;
+                }
             }
 
         } catch (JSONException e) {
@@ -80,5 +79,10 @@ public class PublishTopicStategyHandler implements StrategyHandler {
     @Autowired
     public void setTopicService(TopicServiceImpl topicService) {
         this.topicService = topicService;
+    }
+
+    @Autowired
+    public void setSubscriberService(SubscriberServiceImpl subscriberService) {
+        this.subscriberService = subscriberService;
     }
 }

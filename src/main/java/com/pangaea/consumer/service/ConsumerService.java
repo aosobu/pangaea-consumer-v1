@@ -17,20 +17,20 @@ public class ConsumerService {
     private Logger logger = LoggerFactory.getLogger(ConsumerService.class);
     private List<StrategyHandler> strategyHandlerList;
 
-//    @KafkaListener(topics = "${kafka.topic.request-topic}" , containerFactory = "kafkaListenerContainerFactory")
-//    @SendTo()
-//    public String receive(Message<String> message) {
-//        String result = "";
-//        for (StrategyHandler handler : strategyHandlerList) {
-//            if (handler.isApplicable(message)) {
-//                result = handler.executeAction(message);
-//                logger.info(handler.getName() + " invoked on payload {} " + message.getPayload());
-//                break;
-//            }
-//        }
-//
-//        return result;
-//    }
+    @KafkaListener(topics = "${kafka.topic.request-topic}" , containerFactory = "kafkaListenerContainerFactory")
+    @SendTo()
+    public String receive(Message<String> message) {
+        String result = "";
+        for (StrategyHandler handler : strategyHandlerList) {
+            if (handler.isApplicable(message)) {
+                result = handler.executeAction(message);
+                logger.info(handler.getName() + " invoked on payload {} " + message.getPayload());
+                break;
+            }
+        }
+
+        return result;
+    }
 
     @Resource(name = "strategyHandlerList")
     public void setStrategyHandlerHashMap(List<StrategyHandler> strategyHandlerList) {
